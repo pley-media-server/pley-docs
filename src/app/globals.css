@@ -1,0 +1,291 @@
+@import "tailwindcss";
+
+/* pley.media's palette, copied from its src/app/globals.css so the docs match the site. */
+@theme static {
+  --color-bg: #05070a;
+  --color-surface: #0c1015;
+  --color-surface-2: #12171f;
+  --color-surface-3: #1a202a;
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-line-strong: rgb(255 255 255 / 0.14);
+
+  --color-fg: #eef1f5;
+  --color-prose: #c8cfd9;
+  --color-muted: #a3abb8;
+  --color-subtle: #6b7482;
+
+  --color-accent: #38bdf8;
+  --color-accent-hover: #7dd3fc;
+  --color-accent-fg: #03131f;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    scroll-padding-top: 5.5rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+/* A panel: a hairline border, brighter along the top edge. */
+@utility card {
+  background-color: color-mix(in oklab, var(--color-surface) 85%, transparent);
+  border: 1px solid var(--color-line);
+  box-shadow:
+    inset 0 1px 0 0 rgb(255 255 255 / 0.05),
+    0 1px 2px rgb(0 0 0 / 0.4);
+}
+
+/* Pley's docs, rendered from Markdown (src/lib/markdown.ts). */
+@layer components {
+  .prose {
+    color: var(--color-prose);
+    font-size: 1rem;
+    line-height: 1.75;
+    overflow-wrap: break-word;
+  }
+  .prose > * + * {
+    margin-top: 1.25em;
+  }
+
+  .prose :is(h2, h3, h4) {
+    color: var(--color-fg);
+    font-weight: 600;
+    scroll-margin-top: 5.5rem;
+  }
+  .prose h2 {
+    margin-top: 2.75em;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-line);
+    font-size: 1.5rem;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+  }
+  .prose h3 {
+    margin-top: 2.25em;
+    font-size: 1.2rem;
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+  }
+  .prose h4 {
+    margin-top: 2em;
+    font-size: 1rem;
+  }
+  .prose :is(h2, h3, h4) + * {
+    margin-top: 0.75em;
+  }
+  .prose .anchor {
+    margin-left: 0.4em;
+    color: var(--color-subtle);
+    font-weight: 400;
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 150ms;
+  }
+  .prose :is(h2, h3, h4):hover .anchor {
+    opacity: 1;
+  }
+
+  .prose a:not(.anchor) {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklab, var(--color-accent) 35%, transparent);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 150ms;
+  }
+  .prose a:not(.anchor):hover {
+    text-decoration-color: currentColor;
+  }
+  .prose strong {
+    color: var(--color-fg);
+    font-weight: 600;
+  }
+
+  .prose ul {
+    list-style: disc;
+    padding-left: 1.4em;
+  }
+  .prose ol {
+    list-style: decimal;
+    padding-left: 1.6em;
+  }
+  .prose li + li,
+  .prose li > :is(ul, ol, p) {
+    margin-top: 0.4em;
+  }
+  .prose li::marker {
+    color: var(--color-subtle);
+  }
+  .prose li > input[type="checkbox"] {
+    margin-right: 0.5em;
+  }
+
+  .prose :not(pre) > code {
+    padding: 0.12em 0.38em;
+    border: 1px solid var(--color-line);
+    border-radius: 6px;
+    background: var(--color-surface-2);
+    color: var(--color-fg);
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+  }
+  /* Shiki colours the code and sets its own background inline; !important keeps the site's. */
+  .prose pre {
+    overflow-x: auto;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    background-color: var(--color-surface) !important;
+    font-size: 0.8125rem;
+    line-height: 1.7;
+  }
+  .prose pre code {
+    font-family: var(--font-mono);
+  }
+  /* A code block and its copy button (src/components/copy-code.tsx). */
+  .prose .code {
+    position: relative;
+  }
+  .prose .code pre {
+    padding-right: 4.75rem;
+  }
+  .prose .copy {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    padding: 0.2rem 0.55rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 6px;
+    background: var(--color-surface-2);
+    color: var(--color-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.4;
+    transition:
+      color 150ms,
+      background-color 150ms;
+  }
+  .prose .copy:hover {
+    background: var(--color-surface-3);
+    color: var(--color-fg);
+  }
+
+  .prose blockquote {
+    padding-left: 1rem;
+    border-left: 2px solid color-mix(in oklab, var(--color-accent) 50%, transparent);
+    color: var(--color-muted);
+  }
+  .prose hr {
+    margin-block: 2.5em;
+    border-color: var(--color-line);
+  }
+  .prose img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+  }
+  .prose [align="center"] {
+    text-align: center;
+  }
+  .prose [align="center"] img {
+    display: inline-block;
+  }
+  .prose kbd {
+    padding: 0.1em 0.4em;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 5px;
+    background: var(--color-surface-2);
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+  }
+
+  .prose .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+  }
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    line-height: 1.55;
+  }
+  .prose th {
+    background: var(--color-surface);
+    color: var(--color-fg);
+    font-weight: 600;
+    text-align: left;
+  }
+  .prose :is(th, td) {
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--color-line);
+    vertical-align: top;
+  }
+  .prose tr:last-child td {
+    border-bottom: 0;
+  }
+  .prose :is(th, td)[align="center"] {
+    text-align: center;
+  }
+  .prose :is(th, td)[align="right"] {
+    text-align: right;
+  }
+}
+
+/*
+ * Pagefind's search (src/components/search.tsx). Its components ignore the page's styles and take only these
+ * variables. html:root outranks the light defaults Pagefind's stylesheet sets on :root, whichever loads last.
+ */
+html:root {
+  --pf-text: var(--color-fg);
+  --pf-text-secondary: var(--color-muted);
+  --pf-text-muted: var(--color-subtle);
+  --pf-background: var(--color-surface);
+  --pf-border: var(--color-line-strong);
+  --pf-border-focus: color-mix(in oklab, var(--color-accent) 60%, transparent);
+  --pf-skeleton: var(--color-surface-2);
+  --pf-skeleton-shine: var(--color-surface-3);
+  --pf-hover: var(--color-surface-2);
+  --pf-mark: var(--color-accent);
+  --pf-scroll-shadow: rgb(0 0 0 / 0.45);
+
+  --pf-shadow-sm: 0 2px 8px rgb(0 0 0 / 0.35);
+  --pf-shadow-md: 0 4px 12px rgb(0 0 0 / 0.45);
+  --pf-shadow-lg: 0 24px 64px rgb(0 0 0 / 0.7);
+
+  --pf-error-bg: #2a1215;
+  --pf-error-border: #5c2328;
+  --pf-error-text: #f87171;
+  --pf-error-text-secondary: #ef4444;
+
+  --pf-outline-focus: var(--color-accent);
+  --pf-font: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --pf-border-radius: 10px;
+
+  --pf-modal-backdrop: rgb(2 4 8 / 0.72);
+  --pf-modal-max-width: 640px;
+}

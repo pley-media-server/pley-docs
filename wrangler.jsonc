@@ -1,0 +1,23 @@
+// Serves out/ (from `next build` and Pagefind) at pley.media/docs.
+// No Worker script: every request is a static asset, which Cloudflare serves free and doesn't count against the
+// Workers request limits. The home page is another Worker (pley-site), on pley.media as a Custom Domain;
+// Workers on routes run before a Custom Domain's, so /docs comes here.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pley-docs",
+  "compatibility_date": "2026-09-01",
+  "routes": [
+    { "pattern": "pley.media/docs", "zone_name": "pley.media" },
+    { "pattern": "pley.media/docs/*", "zone_name": "pley.media" }
+  ],
+  // Only pley.media/docs: no workers.dev address, no preview addresses for search engines to find.
+  "workers_dev": false,
+  "preview_urls": false,
+  "assets": {
+    "directory": "./out",
+    // Matches basePath in next.config.ts: out/index.html is /docs/, out/features/index.html is /docs/features/.
+    "base_path": "/docs",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

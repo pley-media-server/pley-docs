@@ -1,0 +1,25 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Pley's docs, fetched at build time by scripts/sync.ts
+/content/
+/public/pley/
+
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
+
+# env files
+.env*
+
+# cloudflare
+.wrangler/
+.dev.vars
+.secret.env
